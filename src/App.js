@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import Header from "./components/Layout/Header";
 
 const App = () => {
   return (
-    <div className="app">
-      <h1>Hello React App</h1>
-    </div>
-  )
-}
+    <>
+      <Header />
+    </>
+  );
+};
 
-export default App
+export default App;
