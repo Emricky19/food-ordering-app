@@ -4,19 +4,65 @@ import CartContext from "./cart-context";
 
 const defaultCartState = {
   items: [],
-  totalAmount: 0.00,
+  totalAmount: 0.0,
 };
 
 const cartReducer = (state, action) => {
   if (action.type === "ADD") {
-    
-    const updatedItems = state.items.concat(action.item);
     const updateTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
+
+    //get the index of a particular element
+    const existingItemIndex = state.items.findIndex(
+      (item) => item.id === action.item.id
+    );
+
+    //returns the element based on the index if it exists else it returns null
+    const existingItem = state.items[existingItemIndex];
+
+    let updatedItems;
+    if (existingItem) {
+      const updatedItem = {
+        ...existingItem,
+        amount: existingItem.amount + action.item.amount,
+      };
+      updatedItems = [...state.items];
+      updatedItems[existingItemIndex] = updatedItem;
+    } else {
+      updatedItems = state.items.concat(action.item);
+    }
 
     return {
       items: updatedItems,
       totalAmount: updateTotalAmount,
+    };
+  }
+
+  if (action.type === "REMOVE") {
+    const existingItemIndex = state.items.findIndex(
+      (item) => item.id === action.id
+    );
+
+    const existingItem = state.items[existingItemIndex];
+
+    const updatedTotalAmount = state.totalAmount - existingItem.price;
+
+    let updatedItems;
+
+    if (existingItem.amount === 1) {
+      updatedItems = state.items.filter((item) => item.id !== action.id);
+    } else {
+      const updatedItem = {
+        ...existingItem,
+        amount: existingItem.amount - 1,
+      };
+      updatedItems = [...state.items];
+      updatedItems[existingItemIndex] = updatedItem;
+    }
+
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
     };
   }
   return defaultCartState;
