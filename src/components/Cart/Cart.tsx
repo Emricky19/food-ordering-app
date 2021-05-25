@@ -4,21 +4,22 @@ import CartContext from "../../store/cart-context";
 
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
+import Item from "../../model/Item"
 
 import classes from "./Cart.module.css";
 
-const Cart = (props) => {
+const Cart: React.FC<{onClose: () => void}> = (props) => {
   const cartCtx = useContext(CartContext);
 
   const totalAmount = `${cartCtx.totalAmount.toFixed(2)}`;
 
   const hasItems = cartCtx.items.length > 0;
 
-  const cartItemRemoveHandler = (id) => {
+  const cartItemRemoveHandler = (id: string) => {
     cartCtx.removeItem(id);
   };
 
-  const cartItemAddHandler = (item) => {
+  const cartItemAddHandler = (item: Item) => {
     const cartItem = {...item, amount: 1}
     cartCtx.addItem(cartItem);
   };
