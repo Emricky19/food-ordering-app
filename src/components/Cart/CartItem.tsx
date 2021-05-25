@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from './CartItem.module.css';
 
-const CartItem = (props) => {
+const CartItem: React.FC<{name: string; amount: number; price: number; onRemove: () => void; onAdd: () => void}> = (props) => {
   
   const price = `$${props.price.toFixed(2)}`;
 
