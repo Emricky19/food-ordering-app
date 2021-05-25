@@ -4,11 +4,12 @@ import CartContext from "../../../store/cart-context";
 
 import classes from "./MealItem.module.css";
 
-const MealItem = (props) => {
+const MealItem: React.FC<{price: number; id: string; name: string; description: string}> = (props) => {
+
   const cartCxt = useContext(CartContext);
   const price = `${props.price.toFixed(2)}`;
   
-  const addToCartHandler = amount => {
+  const addToCartHandler = (amount: number) => {
       cartCxt.addItem({
           id: props.id,
           name: props.name,
