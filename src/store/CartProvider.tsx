@@ -1,26 +1,37 @@
 import React, { useReducer } from "react";
 
-import CartContext from "./cart-context";
+import CartContext, {iCartContext } from "./cart-context";
+import Item from "../model/Item"
 
-const defaultCartState = {
+
+
+
+interface iDefaultCartState {
+  items: Item[],
+  totalAmount: number
+}
+const defaultCartState: iDefaultCartState = {
   items: [],
   totalAmount: 0.0,
 };
 
-const cartReducer = (state, action) => {
+type ACTIONTYPE = | {type: 'ADD', item: Item} | {type: 'REMOVE', id: string}
+
+
+const cartReducer = (state: typeof defaultCartState, action: ACTIONTYPE) => {
   if (action.type === "ADD") {
     const updateTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
 
     //get the index of a particular element
     const existingItemIndex = state.items.findIndex(
-      (item) => item.id === action.item.id
+      (item: Item) => item.id === action.item.id
     );
 
     //returns the element based on the index if it exists else it returns null
-    const existingItem = state.items[existingItemIndex];
+    const existingItem: Item = state.items[existingItemIndex];
 
-    let updatedItems;
+    let updatedItems: Item[];
     if (existingItem) {
       const updatedItem = {
         ...existingItem,
@@ -67,21 +78,23 @@ const cartReducer = (state, action) => {
   return defaultCartState;
 };
 
-const CartProvider = (props) => {
+
+const CartProvider: React.FC = (props) => {
+  
   const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
     defaultCartState
   );
 
-  const addItemHandler = (item) => {
+  const addItemHandler = (item: Item) => {
     dispatchCartAction({ type: "ADD", item: item });
   };
 
-  const removeItemHandler = (id) => {
+  const removeItemHandler = (id: string) => {
     dispatchCartAction({ type: "REMOVE", id });
   };
 
-  const cartContext = {
+  const cartContext: iCartContext = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
     addItem: addItemHandler,
