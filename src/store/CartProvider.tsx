@@ -1,22 +1,18 @@
 import React, { useReducer } from "react";
 
-import CartContext, {iCartContext } from "./cart-context";
-import Item from "../model/Item"
-
-
-
+import CartContext, { iCartContext } from "./cart-context";
+import Item from "../model/Item";
 
 interface iDefaultCartState {
-  items: Item[],
-  totalAmount: number
+  items: Item[];
+  totalAmount: number;
 }
 const defaultCartState: iDefaultCartState = {
   items: [],
   totalAmount: 0.0,
 };
 
-type ACTIONTYPE = | {type: 'ADD', item: Item} | {type: 'REMOVE', id: string}
-
+type ACTIONTYPE = { type: "ADD"; item: Item } | { type: "REMOVE"; id: string };
 
 const cartReducer = (state: typeof defaultCartState, action: ACTIONTYPE) => {
   if (action.type === "ADD") {
@@ -78,9 +74,7 @@ const cartReducer = (state: typeof defaultCartState, action: ACTIONTYPE) => {
   return defaultCartState;
 };
 
-
 const CartProvider: React.FC = (props) => {
-  
   const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
     defaultCartState
