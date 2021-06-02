@@ -23,19 +23,13 @@ const books = [
 ];
 
 const resolvers = {
-    Query: {
-      books: () => books,
-    },
-  };
-
-
-const main = async () => {
-  const server = new ApolloServer({typeDefs, resolvers});
-
-  const { url } = await server.listen(3000);
-
-  console.log(`🚀 Server ready at ${url}`);
+  Query: {
+    books: () => books,
+  },
 };
 
+const server = new ApolloServer({ typeDefs, resolvers });
 
-main()
+server.listen({ port: 3000 || process.env.PORT }).then(({ url }) => {
+  console.log(`Server running on port ${url}`);
+});
