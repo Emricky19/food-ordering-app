@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from "apollo-server";
 
-const typeDefs = `
+const typeDefs = gql`
     type Book {
         title: String
         author: String
