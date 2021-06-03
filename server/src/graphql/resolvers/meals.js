@@ -3,7 +3,7 @@ import { Meal } from "../../models/Meal.js";
 
 const mealResolvers = {
   Query: {
-    meals: async () => {
+    fetchMeals: async () => {
       try {
         const meals = await Meal.find();
         return meals;
