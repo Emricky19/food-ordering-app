@@ -19,7 +19,7 @@ mongoose
     console.log("Failed to connect to Mongo");
   });
 
-server.listen({ port: 3000 || process.env.PORT }).then(({ url }) => {
+server.listen({ port: 8080 || process.env.PORT }).then(({ url }) => {
   console.log(`Server running on port ${url}`);
 });
 
