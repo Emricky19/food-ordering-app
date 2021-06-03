@@ -13,7 +13,7 @@ const typeDefs = gql`
     }
     type Query {
         books: [Book],
-        fetchMeals: [Meal]
+        meals: [Meal]
     }
 `;
 
