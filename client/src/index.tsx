@@ -7,7 +7,7 @@ import { ApolloProvider } from "@apollo/client/react";
 import "./index.css";
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8000/',
+  uri: process.env.REACT_APP_APOLLO_URI,
   cache: new InMemoryCache(),
 });
 
