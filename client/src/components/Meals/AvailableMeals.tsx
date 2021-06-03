@@ -1,38 +1,41 @@
 import React from "react";
 import Card from "../UI/Card";
 import MealItem from "./MealItem/MealItem";
+// import Item from "../../model/Item"
+
+import { useQuery, gql } from "@apollo/client";
 
 import classes from "./AvailableMeals.module.css";
 
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+interface MealInterface {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}
 
+interface MealsDataInterface {
+  meals: MealInterface[];
+}
+
+const AVAILABLE_MEALS = gql`
+  query FetchMeals {
+    meals {
+      id
+      name
+      description
+      price
+    }
+  }
+`;
 const AvailableMeals = () => {
-  const mealsList = DUMMY_MEALS.map((meal) => (
+  const { loading, data } = useQuery<MealsDataInterface>(AVAILABLE_MEALS);
+
+  let mealsList;
+
+  if (loading) return <p>Loading...</p>;
+
+  mealsList = data?.meals.map((meal: MealInterface) => (
     <MealItem
       key={meal.id}
       id={meal.id}
