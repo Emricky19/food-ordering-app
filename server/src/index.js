@@ -1,35 +1,25 @@
-import { ApolloServer, gql } from "apollo-server";
+import dotenv from "dotenv"
+dotenv.config()
 
-const typeDefs = gql`
-    type Book {
-        title: String
-        author: String
-    }
+import { ApolloServer } from "apollo-server";
+import typeDefs from "./graphql/typeDefs.js"
+import resolvers from "./graphql/resolvers/index.js"
 
-    type Query {
-        books: [Book]
-    }
-`;
+import mongoose from "mongoose";
 
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
-
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
 
 const server = new ApolloServer({ typeDefs, resolvers });
+
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("MongoDb connected...");
+  })
+  .catch(() => {
+    console.log("Failed to connect to Mongo");
+  });
 
 server.listen({ port: 3000 || process.env.PORT }).then(({ url }) => {
   console.log(`Server running on port ${url}`);
 });
+
