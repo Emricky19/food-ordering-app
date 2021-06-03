@@ -6,14 +6,14 @@ const typeDefs = gql`
         author: String
     }
     type Meal {
-        id: String,
+        id: ID!,
         name: String,
         description: String,
         price: Float,
     }
     type Query {
         books: [Book],
-        meals: [Meal]
+        fetchMeals: [Meal]
     }
 `;
 
