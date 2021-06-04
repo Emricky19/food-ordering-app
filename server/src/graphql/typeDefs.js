@@ -1,20 +1,33 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
-    type Book {
-        title: String
-        author: String
-    }
-    type Meal {
-        id: ID!,
-        name: String,
-        description: String,
-        price: Float,
-    }
-    type Query {
-        books: [Book],
-        meals: [Meal]
-    }
+  type User {
+    id: ID!
+    token: String!
+    username: String!
+    email: String!
+    password: String!
+    createdAt: String
+  }
+
+  input RegisterInput {
+    username: String!
+    email: String!
+    password: String!
+  }
+  type Meal {
+    id: ID!
+    name: String
+    description: String
+    price: Float
+  }
+  type Query {
+    meals: [Meal]
+  }
+
+  type Mutation {
+    registerUser(registerInput: RegisterInput): User!
+  }
 `;
 
 export default typeDefs;
