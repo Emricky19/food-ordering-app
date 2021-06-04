@@ -8,7 +8,7 @@ import resolvers from "./graphql/resolvers/index.js"
 import mongoose from "mongoose";
 
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ typeDefs, resolvers, context: ({req}) => {req} });
 
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
