@@ -1,10 +1,14 @@
 import mealResolvers from "./meals.js"
-import bookResolvers from "./books.js"
+
+import userResolvers from "./user.js"
 
 const resolvers = {
     Query: {
         ...mealResolvers.Query,
-        ...bookResolvers.Query
+        
+    },
+    Mutation: {
+        ...userResolvers.Mutation
     }
 }
 
