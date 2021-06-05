@@ -1,7 +1,7 @@
 import { User } from "../../models/User.js";
 import bcrypt from "bcrypt";
 import { UserInputError, AuthenticationError } from "apollo-server";
-import { validateRegisterInput } from "../../util/validator.js";
+import { validateRegisterInput, validateLoginInput } from "../../util/validator.js";
 import generateToken from "../../util/generateToken.js";
 
 const userResolvers = {
@@ -47,7 +47,33 @@ const userResolvers = {
         token
       };
     },
-  },
+    loginUser: async (_, args) => {
+      const { username, password } = args
+
+      const {errors, valid: isValid } = validateLoginInput(username, password);
+      
+      if(!isValid) throw new UserInputError('Invalid inputs', errors)
+
+      const user = await User.findOne({username})
+
+      if(!user) {
+        errors.general = 'User does not exist'
+        throw authenticationError('User does not exist', {errors})
+      }
+
+      const match = await bcrypt.compare(password, user.password)
+      if(!match) {
+        errors.general = "Username or password incorrect"
+        throw authenticationError('Username or password Incorrect', {errors})
+      }
+      const token = generateToken(user)
+      return {
+        token,
+        ...user._doc,
+        id: user._id
+      }
+    }
+  }
 };
 
 export default userResolvers;
