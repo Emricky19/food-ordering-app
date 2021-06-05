@@ -1,7 +1,10 @@
 import { User } from "../../models/User.js";
 import bcrypt from "bcrypt";
-import { UserInputError, AuthenticationError } from "apollo-server";
-import { validateRegisterInput, validateLoginInput } from "../../util/validator.js";
+import { UserInputError } from "apollo-server";
+import {
+  validateRegisterInput,
+  validateLoginInput,
+} from "../../util/validator.js";
 import generateToken from "../../util/generateToken.js";
 
 const userResolvers = {
@@ -22,14 +25,14 @@ const userResolvers = {
       const userAlreadyExist = await User.findOne({ username });
 
       if (userAlreadyExist) {
-        throw new AuthenticationError("Username is Already Taken", {
+        throw new UserInputError("Username is Already Taken", {
           errors: {
             username: "Username is already taken",
           },
         });
       }
 
-      const cipherPassword = await bcrypt.hash(password, 12);          
+      const cipherPassword = await bcrypt.hash(password, 12);
 
       const newUser = new User({
         username,
@@ -37,43 +40,43 @@ const userResolvers = {
         password: cipherPassword,
         createdAt: new Date().toISOString(),
       });
-      
+
       const user = await newUser.save();
       const token = generateToken(user);
 
       return {
         ...user._doc,
         id: user._id,
-        token
+        token,
       };
     },
     loginUser: async (_, args) => {
-      const { username, password } = args
+      const { username, password } = args;
 
-      const {errors, valid: isValid } = validateLoginInput(username, password);
-      
-      if(!isValid) throw new UserInputError('Invalid inputs', errors)
+      const { errors, valid: isValid } = validateLoginInput(username, password);
 
-      const user = await User.findOne({username})
+      if (!isValid) throw new UserInputError("Invalid inputs", errors);
 
-      if(!user) {
-        errors.general = 'User does not exist'
-        throw authenticationError('User does not exist', {errors})
+      const user = await User.findOne({ username });
+
+      if (!user) {
+        errors.general = "User does not exist";
+        throw new UserInputError("User does not exist", { errors });
       }
 
-      const match = await bcrypt.compare(password, user.password)
-      if(!match) {
-        errors.general = "Username or password incorrect"
-        throw authenticationError('Username or password Incorrect', {errors})
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        errors.general = "Username or password incorrect";
+        throw new UserInputError("Username or password Incorrect", { errors });
       }
-      const token = generateToken(user)
+      const token = generateToken(user);
       return {
         token,
         ...user._doc,
-        id: user._id
-      }
-    }
-  }
+        id: user._id,
+      };
+    },
+  },
 };
 
 export default userResolvers;
