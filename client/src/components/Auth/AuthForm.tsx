@@ -1,18 +1,11 @@
-import React, { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import React, { useState, useContext } from "react";
+import { useMutation } from "@apollo/client";
+
+import { AuthContext } from "../../store/auth-context";
+import { LOGIN_USER, REGISTER_USER } from "../../util/graphql";
 
 import Modal from "../UI/Modal";
 import classes from "./AuthForm.module.css";
-
-const LOGIN_USER = gql`
-  mutation LoginUser($username: String!, $password: String!) {
-    loginUser(username: $username, password: $password) {
-      token
-      id
-      username
-    }
-  }
-`;
 
 interface userCredentials {
   username: string;
@@ -23,16 +16,25 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
   const [isLogin, setIsLogin] = useState(true);
   const [values, setValues] = useState<userCredentials>({
     username: "",
-    password: "",
+    ...(!isLogin && { email: '' }),
+    password: ""
   });
 
-  const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    update(_, result) {
-      console.log(result);
+  const { login } = useContext(AuthContext);
+
+  const MUTATION = isLogin ? LOGIN_USER : REGISTER_USER;
+
+  
+
+  const [loginUser, { loading }] = useMutation(MUTATION, {
+    update(_, { data }) {
+      // console.log(data.loginUser);
+      console.log(data.registerUser);
+      // login();
     },
     onError(err) {
       // setErrors(err.graphQLErrors[0].extensions.exception.errors);
-      console.log(err.graphQLErrors[0].extensions!.exceptions.errors);
+      console.log(err.graphQLErrors[0].extensions?.exceptions.errors);
     },
     variables: values,
   });
@@ -54,7 +56,6 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
 
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
-
     loginUser();
   };
 
@@ -72,6 +73,17 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
               required
             />
           </div>
+          {!isLogin && (
+            <div className={classes.control}>
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                onChange={changeHandler}
+                required
+              />
+            </div>
+          )}
           <div className={classes.control}>
             <label htmlFor="password">Your Password</label>
             <input
@@ -82,7 +94,7 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
             />
           </div>
           <div className={classes.actions}>
-            <button type="submit">
+            <button type="submit" disabled={loading}>
               {isLogin ? "Login" : "Create Account"}
             </button>
             <button className={classes.toggle} onClick={switchAuthModeHandler}>
