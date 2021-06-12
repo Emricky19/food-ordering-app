@@ -24,13 +24,11 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
 
   const MUTATION = isLogin ? LOGIN_USER : REGISTER_USER;
 
-  
-
   const [loginUser, { loading }] = useMutation(MUTATION, {
     update(_, { data }) {
-      // console.log(data.loginUser);
-      console.log(data.registerUser);
-      // login();
+      const userData = MUTATION === LOGIN_USER ? data.loginUser : data.registerUser;
+      login(userData);
+      props.onClose()
     },
     onError(err) {
       // setErrors(err.graphQLErrors[0].extensions.exception.errors);
