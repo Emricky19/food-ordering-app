@@ -23,16 +23,21 @@ const initialState: initState = {
 
 const storedToken = localStorage.getItem("token");
 
-if(storedToken){
-    const decodedToken: User = jwtDecode(storedToken);
+const decodeToken = (token: string) => {
+  const decodedToken: User = jwtDecode(token);
 
+  return decodedToken
+}
+
+if(storedToken){
+    // const decodedToken: User = jwtDecode(storedToken);
+    const decodedToken = decodeToken(storedToken);
     if (decodedToken.exp * 1000 < Date.now()) {
       localStorage.removeItem("token");
     } else {
       initialState.user = decodedToken;
     }
 }
-
 
 export const AuthContext = createContext<AuthContextInferface>({
   user: initialState.user,
