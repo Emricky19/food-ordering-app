@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -12,4 +12,4 @@ const generateToken = (user) => {
   );
 };
 
-export default generateToken
+export default generateToken;
