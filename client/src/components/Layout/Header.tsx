@@ -7,7 +7,7 @@ import { AuthContext } from "../../store/auth-context";
 
 const Header: React.FC<{ onShowCart: () => void; onShowAuthForm: () => void }> =
   (props) => {
-    const { user: isLoggedIn } = useContext(AuthContext);
+    const { user: isLoggedIn, logout } = useContext(AuthContext);
     return (
       <>
         <header className={classes.header}>
@@ -20,6 +20,14 @@ const Header: React.FC<{ onShowCart: () => void; onShowAuthForm: () => void }> =
                 onClick={props.onShowAuthForm}
               >
                 login
+              </span>
+            )}
+            {isLoggedIn && (
+              <span
+                className={classes["material-icons"]}
+                onClick={() => logout()} 
+              >
+                logout
               </span>
             )}
           </div>
