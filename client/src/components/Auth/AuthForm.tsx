@@ -12,8 +12,16 @@ interface userCredentials {
   password: string;
 }
 
+type ErrorsType = {
+  username: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
+  general: string | undefined;
+}
+
 const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [errors, setErrors ] = useState<ErrorsType | null>(null);
   const [values, setValues] = useState<userCredentials>({
     username: "",
     ...(!isLogin && { email: '' }),
@@ -31,9 +39,9 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
       props.onClose()
       window.location.reload(true)
     },
-    onError(err) {
-      // setErrors(err.graphQLErrors[0].extensions.exception.errors);
-      console.log(err.graphQLErrors[0].extensions?.exceptions.errors);
+    onError(err) {      
+      setErrors(err.graphQLErrors[0].extensions?.exception.errors)
+      console.log(err.graphQLErrors[0].extensions?.exception.errors);
     },
     variables: values,
   });
@@ -92,6 +100,7 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
               required
             />
           </div>
+          {errors?.general && <p style={{color: 'red', marginTop: '10px'}}>{errors.general}</p>}
           <div className={classes.actions}>
             <button type="submit" disabled={loading}>
               {isLogin ? "Login" : "Create Account"}
