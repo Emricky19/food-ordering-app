@@ -29,6 +29,7 @@ const AuthForm: React.FC<{ onClose: () => void }> = (props) => {
       const userData = MUTATION === LOGIN_USER ? data.loginUser : data.registerUser;
       login(userData);
       props.onClose()
+      window.location.reload(true)
     },
     onError(err) {
       // setErrors(err.graphQLErrors[0].extensions.exception.errors);
