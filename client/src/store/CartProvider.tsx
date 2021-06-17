@@ -33,7 +33,10 @@ const cartReducer = (state: typeof defaultCartState, action: ACTIONTYPE) => {
         ...existingItem,
         amount: existingItem.amount + action.item.amount,
       };
+      //keep a copy of old array of items
       updatedItems = [...state.items];
+
+      //update only the item of that particular id
       updatedItems[existingItemIndex] = updatedItem;
     } else {
       updatedItems = state.items.concat(action.item);
