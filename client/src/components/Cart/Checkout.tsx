@@ -1,7 +1,12 @@
-import React from 'react'
-import classes from './Checkout.module.css';
+import React, { useRef } from "react";
+import classes from "./Checkout.module.css";
 
-const Checkout: React.FC<{onCancel: () => void}> = (props) => {
+const Checkout: React.FC<{ onCancel: () => void }> = (props) => {
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const streetInputRef = useRef<HTMLInputElement | null>(null);
+  const postalInputRef = useRef<HTMLInputElement | null>(null);
+  const cityInputRef = useRef<HTMLInputElement | null>(null);
+
   const confirmHandler = (event: React.FormEvent) => {
     event.preventDefault();
   };
@@ -9,23 +14,23 @@ const Checkout: React.FC<{onCancel: () => void}> = (props) => {
   return (
     <form className={classes.form} onSubmit={confirmHandler}>
       <div className={classes.control}>
-        <label htmlFor='name'>Your Name</label>
-        <input type='text' id='name' />
+        <label htmlFor="name">Your Name</label>
+        <input type="text" id="name" ref={nameInputRef} />
       </div>
       <div className={classes.control}>
-        <label htmlFor='street'>Street</label>
-        <input type='text' id='street' />
+        <label htmlFor="street">Street</label>
+        <input type="text" id="street" ref={streetInputRef} />
       </div>
       <div className={classes.control}>
-        <label htmlFor='postal'>Postal Code</label>
-        <input type='text' id='postal' />
+        <label htmlFor="postal">Postal Code</label>
+        <input type="text" id="postal" ref={postalInputRef} />
       </div>
       <div className={classes.control}>
-        <label htmlFor='city'>City</label>
-        <input type='text' id='city' />
+        <label htmlFor="city">City</label>
+        <input type="text" id="city" ref={cityInputRef} />
       </div>
       <div className={classes.actions}>
-        <button type='button' onClick={props.onCancel}>
+        <button type="button" onClick={props.onCancel}>
           Cancel
         </button>
         <button className={classes.submit}>Confirm</button>
