@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, CreateDateColumn } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
 @Entity("users")
 @ObjectType()
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   @Field()
   id: number;
 
@@ -19,7 +19,8 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @Column({ type: "timestamptz" })
+  @CreateDateColumn()
   @Field()
   createdAt: Date;
+
 }
