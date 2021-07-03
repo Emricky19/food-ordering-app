@@ -1,18 +1,21 @@
-import { Resolver, Mutation, Arg } from "type-graphql";
+import { Resolver, Mutation, Arg, Query } from "type-graphql";
 import bcrypt from "bcrypt";
 
 import { User } from "../../../entity/User";
 import { RegisterInput } from "./register/registerInput";
-import generateToken from "../../util/generateToken";
-import { UserOutput } from "../../types/UserOutput";
+
 
 @Resolver(User)
 export class RegisterResolver {
-  // ...
-  @Mutation()
-  async recipes(
+  @Query(() => String)
+  async hello() {
+    return "Hello world!";
+  }
+
+  @Mutation(() => User)
+  async register(
     @Arg("user") { username, email, password }: RegisterInput
-  ): Promise<UserOutput> {
+  ): Promise<User> {
     const hash = await bcrypt.hash(password, 12);
 
     password = hash;
@@ -23,10 +26,6 @@ export class RegisterResolver {
     });
 
     await user.save();
-    const token = generateToken(user);
-    return {
-      token,
-      user,
-    };
+    return user;
   }
 }
